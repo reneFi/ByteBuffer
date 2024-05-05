@@ -295,7 +295,7 @@ TEST(BitPosition, UnequalsCompareOfEqualObjects_ShouldReturnTrue) {
 /**************************************************************************************************
  * Wrap around in operation
  **************************************************************************************************/
-// @brief test if Dekrement of Pos 0 is not working 
+// @brief test if Dekrement of Pos 0 is working 
 /// Dekrement of Bitposition Zero  
 TEST(BitPosition, DekrementBitPositionOfZero_ShouldReturnBitPositionMax) {
   ByteBuffer::BitPosition bp(0,0);
@@ -306,7 +306,7 @@ TEST(BitPosition, DekrementBitPositionOfZero_ShouldReturnBitPositionMax) {
   
 }
 
-// @brief test if subtract larger BitPosition from smaller is not working 
+// @brief test if subtract larger BitPosition from smaller is working 
 /// Subtract larger BitPosition from smaller one
 TEST(BitPosition, SubktractLargerBitPositionFromSmaller_ShouldReturnCorrectBitPosition) {
   ByteBuffer::BitPosition bp(6,124);
@@ -315,5 +315,16 @@ TEST(BitPosition, SubktractLargerBitPositionFromSmaller_ShouldReturnCorrectBitPo
 
   EXPECT_EQ(bp.getBitPos(),7);
   EXPECT_EQ(bp.getBytePos(), 4294967161);
+  
+}
+
+// @brief test if Inkrement of BitPosition Max is working 
+/// Inkrement of Bitposition Max  
+TEST(BitPosition, InkrementBitPositionMax_ShouldReturnBitPositionZero) {
+  ByteBuffer::BitPosition bp(ByteBuffer::bitPositionMax);
+  
+  ++bp;
+
+  EXPECT_TRUE(bp == ByteBuffer::bitPositionZero);
   
 }
