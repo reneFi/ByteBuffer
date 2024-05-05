@@ -34,10 +34,16 @@ class BitPosition
      friend BitPosition& operator--(BitPosition& lhs, int rhs);
      friend BitPosition& operator--(BitPosition& lhs);
 
+     friend bool operator==(const BitPosition& lhs, const BitPosition& rhs);
+     friend bool operator!=(const BitPosition& lhs, const BitPosition& rhs);
     private:
      uint8_t bitPos;
      uint32_t bytePos;
 
 };
+
+constexpr BitPosition bitPositionZero(0,0);
+constexpr BitPosition bitPositionMax(UINT32_MAX,(UINT8_WIDTH -1));
 }
+
 #endif

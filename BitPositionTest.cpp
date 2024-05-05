@@ -261,3 +261,59 @@ TEST(BitPosition, PostfixDekrementOfObjectWithBitUnderrun_ShouldReturnCorrectBit
   EXPECT_EQ(bp.getBytePos(), 1);
   
 }
+
+/***************************************************************************************************************
+ * comparison operators
+ ***************************************************************************************************************/
+
+/// @brief test if Equality of two BitPositions is working
+/// content comapre two objects of equality 
+TEST(BitPosition, EqualsCompareOfEqualObjects_ShouldReturnTrue) {
+  ByteBuffer::BitPosition bp2(2,1);
+  ByteBuffer::BitPosition bp1(2,1);
+  ByteBuffer::BitPosition bp3(2,2);
+  ByteBuffer::BitPosition bp4(1,1);
+
+  EXPECT_TRUE(bp1 == bp2);
+  EXPECT_FALSE(bp1 == bp3);
+  EXPECT_FALSE(bp1 == bp4);
+}
+
+/// @brief test if Unequality of two BitPositions is working
+/// content comapre two objects of unequality 
+TEST(BitPosition, UnequalsCompareOfEqualObjects_ShouldReturnTrue) {
+  ByteBuffer::BitPosition bp2(2,1);
+  ByteBuffer::BitPosition bp1(2,1);
+  ByteBuffer::BitPosition bp3(2,2);
+  ByteBuffer::BitPosition bp4(1,1);
+
+  EXPECT_FALSE(bp1 != bp2);
+  EXPECT_TRUE(bp1 != bp3);
+  EXPECT_TRUE(bp1 != bp4);
+}
+
+/**************************************************************************************************
+ * Wrap around in operation
+ **************************************************************************************************/
+// @brief test if Dekrement of Pos 0 is not working 
+/// Dekrement of Bitposition Zero  
+TEST(BitPosition, DekrementBitPositionOfZero_ShouldReturnBitPositionMax) {
+  ByteBuffer::BitPosition bp(0,0);
+  
+  --bp;
+
+  EXPECT_TRUE(bp == ByteBuffer::bitPositionMax);
+  
+}
+
+// @brief test if subtract larger BitPosition from smaller is not working 
+/// Subtract larger BitPosition from smaller one
+TEST(BitPosition, SubktractLargerBitPositionFromSmaller_ShouldReturnCorrectBitPosition) {
+  ByteBuffer::BitPosition bp(6,124);
+  
+  bp -= bp_c;
+
+  EXPECT_EQ(bp.getBitPos(),7);
+  EXPECT_EQ(bp.getBytePos(), 4294967161);
+  
+}

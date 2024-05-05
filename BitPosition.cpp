@@ -77,4 +77,11 @@ BitPosition& operator--(BitPosition& lhs) {
     return lhs;
 }
 
+bool operator==(const BitPosition& lhs, const BitPosition& rhs) {
+    return lhs.bitPos == rhs.bitPos && lhs.bytePos == rhs.bytePos;
+}
+
+bool operator!=(const BitPosition& lhs, const BitPosition& rhs) {
+    return !operator==(lhs,rhs);
+}
 }
