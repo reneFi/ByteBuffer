@@ -36,6 +36,9 @@ class BitPosition
 
      friend bool operator==(const BitPosition& lhs, const BitPosition& rhs);
      friend bool operator!=(const BitPosition& lhs, const BitPosition& rhs);
+     friend bool operator>(const BitPosition& lhs, const BitPosition& rhs);
+     friend bool operator<(const BitPosition& lhs, const BitPosition& rhs);
+
     private:
      uint8_t bitPos;
      uint32_t bytePos;

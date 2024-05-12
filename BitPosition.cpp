@@ -84,4 +84,13 @@ bool operator==(const BitPosition& lhs, const BitPosition& rhs) {
 bool operator!=(const BitPosition& lhs, const BitPosition& rhs) {
     return !operator==(lhs,rhs);
 }
+
+bool operator>(const BitPosition& lhs, const BitPosition& rhs) {
+    return lhs.bytePos > rhs.bytePos || (lhs.bytePos == rhs.bytePos && lhs.bitPos > rhs.bitPos);
+}
+
+bool operator<(const BitPosition& lhs, const BitPosition& rhs) {
+    return lhs.bytePos < rhs.bytePos || (lhs.bytePos == rhs.bytePos && lhs.bitPos < rhs.bitPos);
+}
+
 }

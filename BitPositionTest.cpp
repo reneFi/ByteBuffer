@@ -292,6 +292,36 @@ TEST(BitPosition, UnequalsCompareOfEqualObjects_ShouldReturnTrue) {
   EXPECT_TRUE(bp1 != bp4);
 }
 
+/// @brief test if greater than operator is working
+/// content compare two objects of greater than relation 
+TEST(BitPosition, GreaterThanCompareOfEqualObjects_ShouldReturnTrue) {
+  ByteBuffer::BitPosition bp1(2,2);
+  ByteBuffer::BitPosition bp2(2,1);
+  ByteBuffer::BitPosition bp3(2,0);
+  ByteBuffer::BitPosition bp4(1,6);
+    
+  EXPECT_TRUE(bp1 > bp2);
+  EXPECT_FALSE(bp1 > bp1);
+  EXPECT_TRUE(bp1 > bp3);
+  EXPECT_TRUE(bp1 > bp4);
+  EXPECT_TRUE(ByteBuffer::bitPositionMax > ByteBuffer::bitPositionZero);
+}
+
+/// @brief test if less than operator is working
+/// content compare two objects of less than relation 
+TEST(BitPosition, LessThanCompareOfEqualObjects_ShouldReturnTrue) {
+  ByteBuffer::BitPosition bp1(2,2);
+  ByteBuffer::BitPosition bp2(2,1);
+  ByteBuffer::BitPosition bp3(2,0);
+  ByteBuffer::BitPosition bp4(1,6);
+  
+  EXPECT_TRUE(bp2 < bp1);
+  EXPECT_FALSE(bp1 < bp1);
+  EXPECT_TRUE(bp3 < bp1);
+  EXPECT_TRUE(bp4 < bp1);
+  EXPECT_TRUE(ByteBuffer::bitPositionZero < ByteBuffer::bitPositionMax);
+}
+
 /**************************************************************************************************
  * Wrap around in operation
  **************************************************************************************************/
