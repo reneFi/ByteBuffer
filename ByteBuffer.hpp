@@ -13,42 +13,12 @@ template <size_t Bytes>
         public:
             ByteBuffer() {buf.fill(0);};
             ~ByteBuffer() = default;
-
-        void setValue(const BitPosition pos,uint32_t value,const uint8_t bitCount) {
+        
+        template <typename N>
+        void setValue(const BitPosition pos,N value,const uint8_t bitCount) {
             BitPosition _pos = pos;
             BitPosition max = pos;
-            if (bitCount <= 32)
-            {
-                if (_pos + bitCount < BitPosition(Bytes,0))
-                {
-                    max = _pos + bitCount;
-                }else
-                {
-                    max = BitPosition(Bytes,0);
-                }
-            }
-            
-            uint8_t idx = 0;
-            while ( _pos < max )
-            {
-                uint8_t insert = (value >> idx);
-                insert &= 1;
-                if (insert == 1)
-                {
-                    setBit(_pos);
-                }else 
-                {
-                    resetBit(_pos);
-                }
-                _pos++;
-                idx++;
-            }
-        };
-
-        void setValue(const BitPosition pos,uint8_t value,const uint8_t bitCount) {
-            BitPosition _pos = pos;
-            BitPosition max = pos;
-            if (bitCount <= 8)
+            if (bitCount <= sizeof(N) * 8)
             {
                 if (_pos + bitCount < BitPosition(Bytes,0))
                 {
@@ -85,6 +55,7 @@ template <size_t Bytes>
         constexpr size_t size() {return buf.size();};
         uint8_t* getData() {return buf.data();};
     private:
+        
         void setBit(BitPosition pos) {
             buf.at(pos.getBytePos()) |= (1 << pos.getBitPos());
         }; 
