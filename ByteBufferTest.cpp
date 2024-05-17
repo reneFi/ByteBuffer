@@ -113,8 +113,8 @@ TEST(ByteBuffer, Insert32BitValueInShorterBuffer_ShouldReturnByteBufferWithCompl
   EXPECT_EQ(memcmp(dataBuf1,&compareBuffer,sizeof(compareBuffer)),0);
 }
 
-/// @brief test if insert over byte border is working
-/// Test if inserting a bit pattern over byte border returns correct value 
+/// @brief test if insert 32 byte border is working
+/// Test if inserting a bit pattern larger than one byte works as expected 
 TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithCompleteValue) {
   ByteBuffer::ByteBuffer<4> bp1;
   uint32_t data = 0xabcd1234;
@@ -127,3 +127,4 @@ TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithComplet
   ASSERT_EQ(sizeBuf1,4);
   EXPECT_EQ(memcmp(dataBuf1,&compareBuffer,sizeof(compareBuffer)),0);
 }
+
