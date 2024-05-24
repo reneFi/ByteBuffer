@@ -19,6 +19,10 @@ TEST(ByteBuffer, DefaultConstructionOfObject_ShouldReturnBitPositionZero) {
   EXPECT_EQ(*data,*emptyBuffer);
 }
 
+/**********************************************************************************************************
+ * Set Value from Position
+ **********************************************************************************************************/
+
 /// @brief test if insert one bit at BitPosition 0 is working
 /// Test if inserting one bit at BitPosition 0 in ByteBuffer object is working 
 TEST(ByteBuffer, InsertOneBitAtPositionZero_ShouldReturnByteBufferWithExactlyOneChangedBit) {
@@ -128,3 +132,59 @@ TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithComplet
   EXPECT_EQ(memcmp(dataBuf1,&compareBuffer,sizeof(compareBuffer)),0);
 }
 
+/**********************************************************************************************************
+ * Get Value from Position
+ **********************************************************************************************************/
+
+/// @brief test if getting an bit from empty buffer is working
+/// Test if getting a bit works as expected 
+TEST(ByteBuffer, Get1BitValueFromEmptyBuffer_ShouldReturnZero) {
+  ByteBuffer::ByteBuffer<2> bp1;
+ 
+  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,1);
+  size_t sizeBuf1 = bp1.size();
+  
+  ASSERT_EQ(sizeBuf1,2);
+  EXPECT_EQ(data,0);
+}
+
+/// @brief test if getting an bit from defined buffer is working
+/// Test if getting a bit works as expected
+TEST(ByteBuffer, Get1BitValueFromDefinedBuffer_ShouldReturnCorrectValue) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  uint8_t dataInsert = 0b0101;
+  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,4);
+
+  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,1);
+  EXPECT_EQ(data,1);
+  data = bp1.getValue(ByteBuffer::BitPosition(0,1),1);
+  EXPECT_EQ(data,0);
+  data = bp1.getValue(ByteBuffer::BitPosition(0,2),1);
+  EXPECT_EQ(data,1);
+  data = bp1.getValue(ByteBuffer::BitPosition(0,3),1);
+  EXPECT_EQ(data,0);
+}
+
+/// @brief test if getting defined range of bits from defined buffer is working
+/// Test if getting defined range of bits within a byte works as expected
+TEST(ByteBuffer, GetBitRangeWithinByteFromDefinedBuffer_ShouldReturnCorrectValue) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  uint8_t dataInsert = 0b1101;
+  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,4);
+
+  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,4);
+  EXPECT_EQ(data,dataInsert);
+}
+
+/// @brief test if getting defined range of bits from defined buffer is working
+/// Test if getting defined range of bits within a byte works as expected
+TEST(ByteBuffer, GetBitRangeOverlapByteBorderFromDefinedBuffer_ShouldReturnCorrectValue) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  constexpr uint8_t dataInsert = 0b11011101;
+  constexpr uint8_t dataCompare = 0b0111; 
+  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,8);
+  bp1.setValue(ByteBuffer::BitPosition(1,0),dataInsert,8);
+
+  uint8_t data = bp1.getValue(ByteBuffer::BitPosition(0,6),4);
+  EXPECT_EQ(data,dataCompare);
+}

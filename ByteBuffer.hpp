@@ -46,8 +46,18 @@ template <size_t Bytes>
             }
         };
         
-        uint32_t getValue(BitPosition pos) {
-            return 0;
+        uint32_t getValue(const BitPosition pos,const uint8_t bitCount) {
+            BitPosition _pos = pos;
+            BitPosition _end = pos + bitCount;
+            uint32_t ret = 0;
+            uint8_t idx = 0;
+            while(_pos < _end)
+            {
+                ret |= (getBit(_pos) << idx);
+                idx++;
+                _pos++;
+            }
+            return ret;
         };
         
         void fill(uint8_t val) {buf.fill(val);};
@@ -61,7 +71,14 @@ template <size_t Bytes>
         }; 
         void resetBit(BitPosition pos) {
             buf.at(pos.getBytePos()) &= ~(1 << pos.getBitPos());
-        }; 
+        };
+
+        uint8_t getBit(BitPosition pos) {
+            
+            uint8_t cont = buf.at(pos.getBytePos());
+            uint8_t cont_without = (cont >> pos.getBitPos());
+            return cont_without & 1;
+        } 
         std::array<uint8_t, Bytes> buf;
     };
 }
