@@ -30,7 +30,7 @@ TEST(ByteBuffer, InsertOneBitAtPositionZero_ShouldReturnByteBufferWithExactlyOne
   uint8_t data1 = 1;
   uint8_t compareBuffer = 0b00000001;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data1,1);
+  bp1.set(ByteBuffer::bitPositionZero,data1,1);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -45,7 +45,7 @@ TEST(ByteBuffer, InsertOneBitAtGivenPosition_ShouldReturnByteBufferWithExactlyOn
   uint8_t data1 = 1;
   uint8_t compareBuffer = 0b00001000;
 
-  bp1.setValue(ByteBuffer::BitPosition(0,3),data1,1);
+  bp1.set(ByteBuffer::BitPosition(0,3),data1,1);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -60,7 +60,7 @@ TEST(ByteBuffer, InsertOneBitOfManyAtPositionZero_ShouldReturnByteBufferWithExac
   uint8_t data1 = 0b11111111;
   uint8_t compareBuffer = 0b00000001;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data1,1);
+  bp1.set(ByteBuffer::bitPositionZero,data1,1);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -76,8 +76,8 @@ TEST(ByteBuffer, InsertSecondValueAtGivenPosition_ShouldReturnByteBufferWithSeco
   uint8_t data2 = 0b00000101;
   uint8_t compareBuffer = 0b00000101;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data1,4);
-  bp1.setValue(ByteBuffer::bitPositionZero,data2,4);
+  bp1.set(ByteBuffer::bitPositionZero,data1,4);
+  bp1.set(ByteBuffer::bitPositionZero,data2,4);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -93,8 +93,8 @@ TEST(ByteBuffer, InsertValueOverByteBorder_ShouldReturnByteBufferWithCompleteVal
   uint8_t data2 = 0b00000101;
   uint16_t compareBuffer = 0b0000011111110101;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data2,4);
-  bp1.setValue(ByteBuffer::BitPosition(0,4),data1,7);
+  bp1.set(ByteBuffer::bitPositionZero,data2,4);
+  bp1.set(ByteBuffer::BitPosition(0,4),data1,7);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -109,7 +109,7 @@ TEST(ByteBuffer, Insert32BitValueInShorterBuffer_ShouldReturnByteBufferWithCompl
   uint32_t data = 0xabcd;
   uint16_t compareBuffer = 0xabcd;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
+  bp1.set(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -124,7 +124,7 @@ TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithComplet
   uint32_t data = 0xabcd1234;
   uint32_t compareBuffer = 0xabcd1234;
 
-  bp1.setValue(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
+  bp1.set(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
   uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
@@ -141,7 +141,7 @@ TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithComplet
 TEST(ByteBuffer, Get1BitValueFromEmptyBuffer_ShouldReturnZero) {
   ByteBuffer::ByteBuffer<2> bp1;
  
-  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,1);
+  uint8_t data = bp1.get(ByteBuffer::bitPositionZero,1);
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,2);
@@ -153,15 +153,15 @@ TEST(ByteBuffer, Get1BitValueFromEmptyBuffer_ShouldReturnZero) {
 TEST(ByteBuffer, Get1BitValueFromDefinedBuffer_ShouldReturnCorrectValue) {
   ByteBuffer::ByteBuffer<2> bp1;
   uint8_t dataInsert = 0b0101;
-  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,4);
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,4);
 
-  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,1);
+  uint8_t data = bp1.get(ByteBuffer::bitPositionZero,1);
   EXPECT_EQ(data,1);
-  data = bp1.getValue(ByteBuffer::BitPosition(0,1),1);
+  data = bp1.get(ByteBuffer::BitPosition(0,1),1);
   EXPECT_EQ(data,0);
-  data = bp1.getValue(ByteBuffer::BitPosition(0,2),1);
+  data = bp1.get(ByteBuffer::BitPosition(0,2),1);
   EXPECT_EQ(data,1);
-  data = bp1.getValue(ByteBuffer::BitPosition(0,3),1);
+  data = bp1.get(ByteBuffer::BitPosition(0,3),1);
   EXPECT_EQ(data,0);
 }
 
@@ -170,9 +170,9 @@ TEST(ByteBuffer, Get1BitValueFromDefinedBuffer_ShouldReturnCorrectValue) {
 TEST(ByteBuffer, GetBitRangeWithinByteFromDefinedBuffer_ShouldReturnCorrectValue) {
   ByteBuffer::ByteBuffer<2> bp1;
   uint8_t dataInsert = 0b1101;
-  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,4);
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,4);
 
-  uint8_t data = bp1.getValue(ByteBuffer::bitPositionZero,4);
+  uint8_t data = bp1.get(ByteBuffer::bitPositionZero,4);
   EXPECT_EQ(data,dataInsert);
 }
 
@@ -182,9 +182,21 @@ TEST(ByteBuffer, GetBitRangeOverlapByteBorderFromDefinedBuffer_ShouldReturnCorre
   ByteBuffer::ByteBuffer<2> bp1;
   constexpr uint8_t dataInsert = 0b11011101;
   constexpr uint8_t dataCompare = 0b0111; 
-  bp1.setValue(ByteBuffer::bitPositionZero,dataInsert,8);
-  bp1.setValue(ByteBuffer::BitPosition(1,0),dataInsert,8);
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+  bp1.set(ByteBuffer::BitPosition(1,0),dataInsert,8);
 
-  uint8_t data = bp1.getValue(ByteBuffer::BitPosition(0,6),4);
+  uint8_t data = bp1.get(ByteBuffer::BitPosition(0,6),4);
+  EXPECT_EQ(data,dataCompare);
+}
+
+/// @brief test if getting defined range of bits from defined buffer is working
+/// Test if getting defined range of bits within a byte works as expected
+TEST(ByteBuffer, GetBitRangeOverlapByteBorderFromDefinedBuffer_ShouldReturnCorrectValue) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  constexpr uint32_t dataInsert = 0b10101010101010101010101010101010;
+  constexpr uint32_t dataCompare = 0b00000000000000001010101010101010; 
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,sizeof(dataInsert) * 8);
+ 
+  uint32_t data = bp1.get(ByteBuffer::bitPositionZero,sizeof(dataCompare) * 8);
   EXPECT_EQ(data,dataCompare);
 }

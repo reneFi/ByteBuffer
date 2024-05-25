@@ -15,7 +15,7 @@ template <size_t Bytes>
             ~ByteBuffer() = default;
         
         template <typename N>
-        void setValue(const BitPosition pos,N value,const uint8_t bitCount) {
+        void set(const BitPosition pos,N value,const uint8_t bitCount) {
             BitPosition _pos = pos;
             BitPosition max = pos;
             if (bitCount <= sizeof(N) * 8)
@@ -36,24 +36,24 @@ template <size_t Bytes>
                 insert &= 1;
                 if (insert == 1)
                 {
-                    setBit(_pos);
+                    set(_pos);
                 }else 
                 {
-                    resetBit(_pos);
+                    reset(_pos);
                 }
                 _pos++;
                 idx++;
             }
         }
         
-        uint32_t getValue(const BitPosition pos,const uint8_t bitCount) {
+        uint32_t get(const BitPosition pos,const uint8_t bitCount) {
             BitPosition _pos = pos;
             BitPosition _end = pos + bitCount;
             uint32_t ret = 0;
             uint8_t idx = 0;
             while(_pos < _end)
             {
-                ret |= (getBit(_pos) << idx);
+                ret |= (get(_pos) << idx);
                 idx++;
                 _pos++;
             }
@@ -66,14 +66,14 @@ template <size_t Bytes>
         uint8_t* getData() {return buf.data();};
     private:
         
-        void setBit(BitPosition pos) {
+        void set(BitPosition pos) {
             buf.at(pos.getBytePos()) |= (1 << pos.getBitPos());
         }; 
-        void resetBit(BitPosition pos) {
+        void reset(BitPosition pos) {
             buf.at(pos.getBytePos()) &= ~(1 << pos.getBitPos());
         };
 
-        uint8_t getBit(BitPosition pos) {
+        uint8_t get(BitPosition pos) {
             
             uint8_t cont = buf.at(pos.getBytePos());
             uint8_t cont_without = (cont >> pos.getBitPos());
