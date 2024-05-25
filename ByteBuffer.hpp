@@ -44,7 +44,7 @@ template <size_t Bytes>
                 _pos++;
                 idx++;
             }
-        };
+        }
         
         uint32_t getValue(const BitPosition pos,const uint8_t bitCount) {
             BitPosition _pos = pos;

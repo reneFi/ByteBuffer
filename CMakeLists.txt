@@ -6,6 +6,8 @@ project (BitPositionLib)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+
 enable_testing()
 find_package(GTest REQUIRED)
 add_executable(BitPositionLib BitPosition.cpp BitPositionTest.cpp ByteBufferTest.cpp)

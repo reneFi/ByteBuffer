@@ -13,7 +13,7 @@ class BitPosition
  public:
      constexpr BitPosition():BitPosition(0,0) {};
      constexpr BitPosition(uint32_t bitPos):BitPosition(bitPos/8,bitPos%8) {};
-     constexpr BitPosition(uint32_t bytePos, uint8_t bitPos):bytePos(bytePos),bitPos(bitPos) {};
+     constexpr BitPosition(uint32_t bytePos, uint8_t bitPos):bitPos(bitPos),bytePos(bytePos) {};
      
      uint8_t getBitPos() {return bitPos;};
      uint32_t getBytePos() {return bytePos;};
