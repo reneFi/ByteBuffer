@@ -6,8 +6,6 @@
 
 namespace ByteBuffer  {
 
-#define ROUND_UP_BYTE(_X) ((_X == 0)? 0 : (_X / 8) + ( ( _X % 8 == 0 ) ? 0 : 1)  )
-
 template <size_t Bytes>
     class ByteBuffer {
         public:
@@ -17,48 +15,54 @@ template <size_t Bytes>
         template <typename N>
         void set(const BitPosition pos,N value,const uint8_t bitCount) {
             BitPosition _pos = pos;
-            BitPosition max = pos;
-            if (bitCount <= sizeof(N) * 8)
-            {
-                if (_pos + bitCount < BitPosition(Bytes,0))
-                {
-                    max = _pos + bitCount;
-                }else
-                {
-                    max = BitPosition(Bytes,0);
-                }
-            }
             
+            BitPosition max = maxPosition<N>(pos,bitCount);      
+
             uint8_t idx = 0;
             while ( _pos < max )
             {
-                uint8_t insert = (value >> idx);
-                insert &= 1;
-                if (insert == 1)
-                {
-                    set(_pos);
-                }else 
-                {
-                    reset(_pos);
-                }
+                uint8_t insert = static_cast<uint8_t>(value >> idx);
+                set<N>(_pos,insert);
                 _pos++;
                 idx++;
             }
         }
+
+        template <typename N>
+        void set(const BitPosition pos,const N insert) {
+            if ((insert & 1) == 1)
+            {
+                set(pos);
+            }else 
+            {
+                reset(pos);
+            }
+        }
         
-        uint32_t get(const BitPosition pos,const uint8_t bitCount) {
+        template <typename N>
+        N get(const BitPosition pos,const uint8_t bitCount) {
             BitPosition _pos = pos;
-            BitPosition _end = pos + bitCount;
-            uint32_t ret = 0;
+
+            BitPosition _end = maxPosition<N>(pos,bitCount);
+
+            N ret = 0;
             uint8_t idx = 0;
             while(_pos < _end)
             {
-                ret |= (get(_pos) << idx);
+                ret |= static_cast<N>(get<N>(_pos) << idx);
                 idx++;
                 _pos++;
             }
             return ret;
-        };
+        }
+        
+        template <typename N>
+        N get(BitPosition pos) {
+            
+            N cont = buf.at(pos.getBytePos());
+            N cont_without = (cont >> pos.getBitPos());
+            return cont_without & 1;
+        } 
         
         void fill(uint8_t val) {buf.fill(val);};
     
@@ -67,18 +71,29 @@ template <size_t Bytes>
     private:
         
         void set(BitPosition pos) {
-            buf.at(pos.getBytePos()) |= (1 << pos.getBitPos());
+            buf.at(pos.getBytePos()) |= static_cast<uint8_t>(1 << pos.getBitPos());
         }; 
         void reset(BitPosition pos) {
-            buf.at(pos.getBytePos()) &= ~(1 << pos.getBitPos());
+            buf.at(pos.getBytePos()) &= static_cast<uint8_t>(~(1 << pos.getBitPos()));
         };
 
-        uint8_t get(BitPosition pos) {
-            
-            uint8_t cont = buf.at(pos.getBytePos());
-            uint8_t cont_without = (cont >> pos.getBitPos());
-            return cont_without & 1;
-        } 
+        template <typename N>
+        BitPosition maxPosition(const BitPosition pos, uint8_t bitCount){
+            BitPosition max = pos;
+            if (bitCount <= sizeof(N) * 8)
+            {
+                if (pos + bitCount < BitPosition(Bytes,0))
+                {
+                    max = pos + bitCount;
+                }else
+                {
+                    max = BitPosition(Bytes,0);
+                }
+            }else{
+                max = BitPosition(Bytes,0);
+            }
+            return max;
+        }
         std::array<uint8_t, Bytes> buf;
     };
 }

@@ -1,5 +1,6 @@
 #include "BitPosition.h"
 namespace ByteBuffer {
+constexpr uint16_t maxBitPos = 256;
 
 BitPosition& operator+=(BitPosition& lhs,const BitPosition& rhs) {
     lhs.bitPos += rhs.bitPos;
@@ -17,7 +18,7 @@ BitPosition& operator-=(BitPosition& lhs, const BitPosition& rhs) {
     lhs.bitPos -= rhs.bitPos;
     if (lhs.bitPos > 7)
     {
-        uint8_t bitDiff = 256 - lhs.bitPos;
+        uint8_t bitDiff = static_cast<uint8_t>(maxBitPos - lhs.bitPos);
         lhs.bitPos = 8 - bitDiff % 8;
         lhs.bytePos -= 1 + bitDiff / 8;
     }
@@ -46,7 +47,8 @@ BitPosition operator+(const BitPosition& lhs,int rhs) {
     return bp;
 }
 
-BitPosition& operator+=(BitPosition& lhs, const size_t rhs) {
+BitPosition& operator+=(BitPosition& lhs, const uint32_t rhs) {
+    
     lhs.bitPos += rhs % 8;
     
     // remove wrap around

@@ -6,7 +6,7 @@ project (BitPositionLib)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Werror)
 
 enable_testing()
 find_package(GTest REQUIRED)

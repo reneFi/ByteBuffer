@@ -19,7 +19,7 @@ class BitPosition
      uint32_t getBytePos() {return bytePos;};
 
      friend BitPosition& operator+=(BitPosition& lhs, const BitPosition& rhs); 
-     friend BitPosition& operator+=(BitPosition& lhs, const size_t rhs); 
+     friend BitPosition& operator+=(BitPosition& lhs, const uint32_t rhs); 
      
      friend BitPosition operator+(const BitPosition &lhs, const BitPosition &rhs);
      friend BitPosition operator+(const BitPosition &lhs, int rhs);
