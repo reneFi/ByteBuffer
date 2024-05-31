@@ -12,7 +12,7 @@ TEST(ByteBuffer, DefaultConstructionOfObject_ShouldReturnBitPositionZero) {
   ByteBuffer::ByteBuffer<1> bp;
   uint8_t emptyBuffer[1] = {0};
 
-  uint8_t *data = bp.getData();
+  const uint8_t *data = bp.getData();
   size_t size = bp.size();
   
   EXPECT_EQ(size,1);
@@ -31,7 +31,7 @@ TEST(ByteBuffer, InsertOneBitAtPositionZero_ShouldReturnByteBufferWithExactlyOne
   uint8_t compareBuffer = 0b00000001;
 
   bp1.set(ByteBuffer::bitPositionZero,data1,1);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,1);
@@ -46,7 +46,7 @@ TEST(ByteBuffer, InsertOneBitAtGivenPosition_ShouldReturnByteBufferWithExactlyOn
   uint8_t compareBuffer = 0b00001000;
 
   bp1.set(ByteBuffer::BitPosition(0,3),data1,1);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,1);
@@ -61,7 +61,7 @@ TEST(ByteBuffer, InsertOneBitOfManyAtPositionZero_ShouldReturnByteBufferWithExac
   uint8_t compareBuffer = 0b00000001;
 
   bp1.set(ByteBuffer::bitPositionZero,data1,1);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,1);
@@ -78,7 +78,7 @@ TEST(ByteBuffer, InsertSecondValueAtGivenPosition_ShouldReturnByteBufferWithSeco
 
   bp1.set(ByteBuffer::bitPositionZero,data1,4);
   bp1.set(ByteBuffer::bitPositionZero,data2,4);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,1);
@@ -95,7 +95,7 @@ TEST(ByteBuffer, InsertValueOverByteBorder_ShouldReturnByteBufferWithCompleteVal
 
   bp1.set(ByteBuffer::bitPositionZero,data2,4);
   bp1.set(ByteBuffer::BitPosition(0,4),data1,7);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,2);
@@ -110,7 +110,7 @@ TEST(ByteBuffer, Insert32BitValueInShorterBuffer_ShouldReturnByteBufferWithCompl
   uint16_t compareBuffer = 0xabcd;
 
   bp1.set(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,2);
@@ -125,7 +125,7 @@ TEST(ByteBuffer, Insert32BitValueInEmptyBuffer_ShouldReturnByteBufferWithComplet
   uint32_t compareBuffer = 0xabcd1234;
 
   bp1.set(ByteBuffer::bitPositionZero,data,sizeof(data) * 8);
-  uint8_t *dataBuf1 = bp1.getData();
+  const uint8_t *dataBuf1 = bp1.getData();
   size_t sizeBuf1 = bp1.size();
   
   ASSERT_EQ(sizeBuf1,4);
