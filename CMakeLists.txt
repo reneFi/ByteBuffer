@@ -27,6 +27,7 @@ else (DOXYGEN_FOUND)
 endif (DOXYGEN_FOUND)
 
 add_subdirectory(tests)
+add_subdirectory(examples)
 
 
 
