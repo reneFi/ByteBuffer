@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <functional>
 
 #include "BitRange.hpp"
 
@@ -176,7 +177,7 @@ template <size_t Bytes>
         }
 
         Bits at(const BitPosition pos, const Byte b) {
-            return at(BitRange(pos,Byte::bits));
+            return at(BitRange(pos,b.bits));
         }
 
         Bit at(const BitPosition pos) {
