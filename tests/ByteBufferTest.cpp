@@ -72,9 +72,9 @@ TEST(ByteBuffer, InsertOneBitOfManyAtPositionZero_ShouldReturnByteBufferWithExac
 /// Test if inserting a bit pattern more than once returns last value 
 TEST(ByteBuffer, InsertSecondValueAtGivenPosition_ShouldReturnByteBufferWithSecondValue) {
   ByteBuffer::ByteBuffer<1> bp1;
-  uint8_t data1 = 0b11111111;
-  uint8_t data2 = 0b00000101;
-  uint8_t compareBuffer = 0b00000101;
+  uint8_t data1 = 0b00000111;
+  uint8_t data2 = 0b11111101;
+  uint8_t compareBuffer = 0b00001101;
 
   bp1.set(ByteBuffer::bitPositionZero,data1,4);
   bp1.set(ByteBuffer::bitPositionZero,data2,4);
@@ -200,4 +200,73 @@ TEST(ByteBuffer, GetToLargeBitRangeFromDefinedBuffer_ShouldReturnTruncatedValue)
 
   uint16_t data = bp1.get<uint16_t>(ByteBuffer::BitPosition(0,6),32);
   EXPECT_EQ(data,dataCompare);
+}
+
+/**********************************************************************************************************
+ * Operations with class Bit 
+ **********************************************************************************************************/
+/// @brief test if setting Bit at defined position is working
+/// Test if setting Bit at defined position is works as expected
+TEST(ByteBuffer, SetBitUsingAtInDefinedBuffer_ShouldReturnChangedBuffer) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  constexpr uint8_t dataInsert = 0b11011101;
+  constexpr uint16_t dataCompare = 0b00000111011101; 
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+  bp1.at(ByteBuffer::BitPosition(1,0)).set();
+
+  uint16_t data = bp1.get<uint16_t>(ByteBuffer::bitPositionZero,16);
+  EXPECT_EQ(data,dataCompare);
+}
+
+/// @brief test if clearing Bit at defined position is working
+/// Test if clearing Bit at defined position works as expected
+TEST(ByteBuffer, ClearBitUsingAtInDefinedBuffer_ShouldReturnChangedBuffer) {
+  ByteBuffer::ByteBuffer<2> bp1;
+  constexpr uint8_t dataInsert = 0b11011101;
+  constexpr uint16_t dataCompare = 0b00000011011100; 
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+  bp1.at(ByteBuffer::BitPosition(0,0)).clear();
+
+  uint16_t data = bp1.get<uint16_t>(ByteBuffer::bitPositionZero,16);
+  EXPECT_EQ(data,dataCompare);
+}
+
+/// @brief test if getting Bit at defined position is working
+/// Test if getting Bit at defined position works as expected
+TEST(ByteBuffer, TestIfBitIsSetUsingAtInDefinedBuffer_ShouldReturnValueInBuffer) {
+  ByteBuffer::ByteBuffer<1> bp1;
+  constexpr uint8_t dataInsert = 0b11011101;
+  
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+    
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitPosition(0,0)).isSet());
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitPosition(0,1)).isCleared());
+}
+
+/**********************************************************************************************************
+ * Operations with class Bits 
+ **********************************************************************************************************/
+/// @brief test if setting Bit at defined position is working
+/// Test if setting Bit at defined position is works as expected
+TEST(ByteBuffer, SetValueUsingAtInDefinedBuffer_ShouldReturnChangedBuffer) {
+  ByteBuffer::ByteBuffer<1> bp1;
+  constexpr uint8_t dataInsert  = 0b11011101;
+  constexpr uint8_t dataCompare = 0b11011011;
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+  bp1.at(ByteBuffer::BitRange(ByteBuffer::BitPosition(0,0),ByteBuffer::BitPosition(0,2))).setValue(0b011);
+
+  uint8_t data = bp1.get<uint8_t>(ByteBuffer::bitPositionZero,8);
+  EXPECT_EQ(data,dataCompare);
+}
+
+/// @brief test if getting Bit at defined position is working
+/// Test if getting Bit at defined position works as expected
+TEST(ByteBuffer, TestGetValueUsingAtInDefinedBuffer_ShouldReturnValueInBuffer) {
+  ByteBuffer::ByteBuffer<1> bp1;
+  constexpr uint8_t dataInsert = 0b11011101;
+  
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+    
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitRange( ByteBuffer::BitPosition(0,1), ByteBuffer::BitPosition(0,6))).hasValue(0b101110));
+
 }
