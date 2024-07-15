@@ -158,6 +158,16 @@ TEST(BitPosition, AddittionOfObjectAndBitOffsetWithBitOverrun_ShouldReturnCorrec
   EXPECT_EQ(bp.getBytePos(), 6);
 }
 
+/// @brief test if Addition of exactly one byte to bitposition object works
+/// Addition  of one byte to existing Bitposition object sets bit and byte position according to result in operation 
+TEST(BitPosition, AddittionOfOneByteToObjectWithBitOverrun_ShouldReturnCorrectBitPosition) {
+  ByteBuffer::BitPosition bp(0,0);
+  
+  bp = bp + 8;
+  
+  EXPECT_EQ(bp.getBitPos(), 0);
+  EXPECT_EQ(bp.getBytePos(), 1);
+}
 /***************************************************************************************************************
  * Inkrement operator
  ***************************************************************************************************************/
@@ -209,6 +219,7 @@ TEST(BitPosition, PostfixInkrementOfObjectWithBitOverrun_ShouldReturnCorrectBitP
   EXPECT_EQ(bp.getBytePos(), 3);
   
 }
+
 
 /***************************************************************************************************************
  * Dekrement operator
@@ -319,6 +330,21 @@ TEST(BitPosition, LessThanCompareOfEqualObjects_ShouldReturnTrue) {
   EXPECT_FALSE(bp1 < bp1);
   EXPECT_TRUE(bp3 < bp1);
   EXPECT_TRUE(bp4 < bp1);
+  EXPECT_TRUE(ByteBuffer::bitPositionZero < ByteBuffer::bitPositionMax);
+}
+
+/// @brief test if less than equals operator is working
+/// compare content of two objects using less than equals relation 
+TEST(BitPosition, LessThanEqualsCompareOfEqualObjects_ShouldReturnTrue) {
+  ByteBuffer::BitPosition bp1(2,2);
+  ByteBuffer::BitPosition bp2(2,1);
+  ByteBuffer::BitPosition bp3(2,2);
+  ByteBuffer::BitPosition bp4(2,3);
+  
+  EXPECT_TRUE(bp2 <= bp1);
+  EXPECT_TRUE(bp1 <= bp1);
+  EXPECT_TRUE(bp3 <= bp1);
+  EXPECT_FALSE(bp4 <= bp1);
   EXPECT_TRUE(ByteBuffer::bitPositionZero < ByteBuffer::bitPositionMax);
 }
 

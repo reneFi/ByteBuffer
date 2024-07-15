@@ -185,6 +185,13 @@ class BitPosition
         return lhs.bytePos < rhs.bytePos || (lhs.bytePos == rhs.bytePos && lhs.bitPos < rhs.bitPos);
      }
 
+     /// @brief This method implements the less than equals operator of two Bitposition objects 
+     /// @param lhs - first object to be compared
+     /// @param rhs - second object to be compared
+     /// @return compare result
+     friend bool operator<=(const BitPosition& lhs, const BitPosition& rhs){
+        return (lhs < rhs || lhs == rhs);
+     }
 
  private:
      uint8_t bitPos;
