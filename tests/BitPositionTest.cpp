@@ -34,6 +34,7 @@ TEST(BitPosition, ConstructionOfObjectWithOneParameter_ShouldReturnCorrectBitPos
 }
 
 constexpr ByteBuffer::BitPosition bp_c(123,5);
+
 /// @brief test if copy construction with bit position is working
 /// Construction of Bitposition object sets bit and byte position according to parameter in constructor 
 TEST(BitPosition, CopyConstructionOfObject_ShouldReturnCorrectBitPosition) {

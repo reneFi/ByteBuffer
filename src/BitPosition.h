@@ -40,7 +40,7 @@ class BitPosition
         return lhs;
      }
      
-     /// @brief This method implements the addition assignement operator of two Bitposition objects 
+     /// @brief This method implements the addition assignement operator of Bitposition object and offset 
      /// @param lhs - object to which is added 
      /// @param rhs - offset to add
      /// @return modified lhs 
@@ -192,7 +192,9 @@ class BitPosition
      friend bool operator<=(const BitPosition& lhs, const BitPosition& rhs){
         return (lhs < rhs || lhs == rhs);
      }
-
+     friend std::ostream& operator<<(std::ostream& os, const BitPosition& obj) {
+        return os << (int)(obj.bytePos) << "." << (int)(obj.bitPos);
+     }
  private:
      uint8_t bitPos;
      uint32_t bytePos;

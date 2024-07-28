@@ -270,3 +270,29 @@ TEST(ByteBuffer, TestGetValueUsingAtInDefinedBuffer_ShouldReturnValueInBuffer) {
   EXPECT_TRUE(bp1.at(ByteBuffer::BitRange( ByteBuffer::BitPosition(0,1), ByteBuffer::BitPosition(0,6))).hasValue(0b101110));
 
 }
+
+/// @brief test if getting elements of different byte sizes at defined position can be accessed
+/// Test if getting elements of different byte sizes at defined position as expected
+TEST(ByteBuffer, TestGetValuesOfDifferentBytesSizeUsingAtInDefinedBuffer_ShouldReturnValueInBuffer) {
+  ByteBuffer::ByteBuffer<5> bp1;
+  constexpr uint8_t dataInsert = 0x12;
+  
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert,8);
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitPosition(0,0), ByteBuffer::Byte(1)).hasValue(0x12));
+
+  constexpr uint32_t dataInsert1 = 0x12345678;
+  bp1.set(ByteBuffer::bitPositionZero,dataInsert1,32);
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitPosition(0,0), ByteBuffer::Byte(4)).hasValue(0x12345678));
+}
+
+/// @brief test setting elements of different byte sizes at different positions
+/// Test if setting elements of different byte sizes at different position work as expected
+TEST(ByteBuffer, TestSettingBitsAtBorders_ShouldNotChangeValueInOtherRange) {
+  ByteBuffer::ByteBuffer<6> bp1;
+  constexpr uint32_t dataInsert1 = 0x12345678;
+
+  bp1.set(ByteBuffer::BitPosition(1,0),dataInsert1,32);
+  bp1.at(ByteBuffer::BitPosition(5,0)).set();
+  
+  EXPECT_TRUE(bp1.at(ByteBuffer::BitPosition(1,0), ByteBuffer::Byte(4)).hasValue(0x12345678));
+}

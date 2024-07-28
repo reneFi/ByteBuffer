@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <ostream>
 #include <functional>
 
 #include "BitRange.hpp"
@@ -26,7 +27,12 @@ class Bits: public BitAccess {
     Bits(std::function<void(uint32_t)> s, std::function<uint32_t(void)> g):BitAccess(s,g) {};
     bool hasValue(uint32_t v) { return (getter() == v);};
     void setValue(uint32_t v) { setter(v);};
+    friend std::ostream& operator<<(std::ostream& os, const Bits& obj);
 };
+std::ostream& operator<<(std::ostream& os, const Bits& obj)
+{
+    return os << obj.getter();
+}
 
 class Bit: public BitAccess {
     public:
@@ -37,7 +43,12 @@ class Bit: public BitAccess {
     void set()   { setter(1); };
     void clear() { setter(0); };
 
+    friend std::ostream& operator<<(std::ostream& os, const Bit& obj);
 };
+std::ostream& operator<<(std::ostream& os, const Bit& obj)
+{
+    return os << (obj.getter()?"set":"cleared");
+}
 
 /// @brief 
 /// @tparam Bytes 
@@ -171,7 +182,7 @@ template <size_t Bytes>
         
         Bits at(const BitRange range) {
             auto setter = [range,this](uint32_t value) { set<uint32_t>(range,value);};
-            std::function<uint8_t(void)> getter = [range,this]() {return get<uint32_t>(range);};
+            std::function<uint32_t(void)> getter = [range,this]() {return get<uint32_t>(range);};
             Bits ret( setter , getter );
             return ret;
         }
