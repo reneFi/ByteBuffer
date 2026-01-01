@@ -12,26 +12,36 @@ namespace ByteBuffer  {
 constexpr uint16_t maxBitPos = 256;
 constexpr uint16_t bitPerByte = 8;
 
+/// @brief Represents a position within a byte buffer at bit resolution.
+/// @details Tracks both the byte index and the bit index (0..7) within that byte.
+/// Provides arithmetic and comparison operators for convenient manipulation.
 class BitPosition
 {
  public:
-     
-     constexpr BitPosition():BitPosition(0,0) {};
-     constexpr BitPosition(uint32_t bitPos):BitPosition(bitPos / bitPerByte,bitPos % bitPerByte) {};
-     constexpr BitPosition(uint32_t bytePos, uint8_t bitPos):bitPos(bitPos),bytePos(bytePos) {};
-     
-     uint8_t getBitPos() {return bitPos;};
-     uint32_t getBytePos() {return bytePos;};
+     /// @brief Default-construct a zero bit position (byte 0, bit 0).
+     constexpr BitPosition():BitPosition(0,0) {}
 
-     // addition assignement operators
+     /// @brief Construct from an absolute bit index; converts to (byte,bit).
+     constexpr BitPosition(uint32_t bitPos):BitPosition(bitPos / bitPerByte,bitPos % bitPerByte) {}
+
+     /// @brief Construct from a byte index and a bit index.
+     constexpr BitPosition(uint32_t bytePos, uint8_t bitPos):bitPos(bitPos),bytePos(bytePos) {}
      
-     /// @brief This method implements the addition assignement operator of two Bitposition objects 
-     /// @param lhs - object to which is added 
-     /// @param rhs - object to add
-     /// @return modified lhs
+     /// @brief Get the bit index within the byte (0..7).
+     constexpr uint8_t getBitPos() const {return bitPos;}
+
+     /// @brief Get the byte index containing the bit.
+     constexpr uint32_t getBytePos() const {return bytePos;}
+
+     // addition assignment operators
+     
+     /// @brief Add another BitPosition to this one (wraps bits into bytes).
+     /// @param lhs The left-hand-side being modified.
+     /// @param rhs The right-hand-side added to `lhs`.
+     /// @return Reference to modified `lhs`.
      friend BitPosition& operator+=(BitPosition& lhs, const BitPosition& rhs) {
         lhs.bitPos += rhs.bitPos;
-    
+
         // remove wrap around
         lhs.bytePos += lhs.bitPos / bitPerByte;
         lhs.bitPos %= bitPerByte;
@@ -40,14 +50,14 @@ class BitPosition
         return lhs;
      }
      
-     /// @brief This method implements the addition assignement operator of Bitposition object and offset 
-     /// @param lhs - object to which is added 
-     /// @param rhs - offset to add
-     /// @return modified lhs 
+     /// @brief Add a number of bits to this position.
+     /// @param lhs The left-hand-side being modified.
+     /// @param rhs The number of bits to add.
+     /// @return Reference to modified `lhs`.
      friend BitPosition& operator+=(BitPosition& lhs, const uint32_t rhs){
-    
+
         lhs.bitPos += rhs % bitPerByte;
-    
+
         // remove wrap around
         lhs.bytePos += lhs.bitPos / bitPerByte;
         lhs.bitPos %= bitPerByte;
@@ -59,10 +69,7 @@ class BitPosition
 
      // addition operators 
 
-     /// @brief This method implements the addition operator of two Bitposition objects 
-     /// @param lhs - first summand
-     /// @param rhs - second summand
-     /// @return sum of both objects
+     /// @brief Return the sum of two bit positions.
      friend BitPosition operator+(const BitPosition &lhs, const BitPosition &rhs){
         BitPosition bp(lhs);
         bp += rhs;
@@ -70,10 +77,7 @@ class BitPosition
         return bp;
      }
 
-     /// @brief This method implements the addition operator of two Bitposition objects 
-     /// @param lhs - first summand
-     /// @param rhs - second summand
-     /// @return sum of both objects
+     /// @brief Return the sum of a bit position and a bit offset.
      friend BitPosition operator+(const BitPosition &lhs, int rhs) {
         BitPosition bp(lhs);
         bp += rhs;
@@ -82,32 +86,24 @@ class BitPosition
      }
      
 
-     // inkrement operators
+     // increment operators
 
-     /// @brief This method implements the postfix inkrement operator of Bitposition object 
-     /// @param lhs - object to be inkremented
-     /// @param rhs - second summand is ignored
-     /// @return inkremented object
+     /// @brief Postfix increment.
      friend BitPosition& operator++(BitPosition& lhs, int /*rhs*/) {
         operator++(lhs);
         return lhs;
      }
 
-     /// @brief This method implements the prefix inkrement operator of Bitposition object 
-     /// @param lhs - object to be inkremented
-     /// @return inkremented object
+     /// @brief Prefix increment.
      friend BitPosition& operator++(BitPosition& lhs) {
         lhs += 1;
         return lhs;
      }
 
 
-     // subtraction assignement operators
+     // subtraction assignment operators
      
-     /// @brief This method implements the subtraction assignement operator of two Bitposition objects 
-     /// @param lhs - object from which is subtracted 
-     /// @param rhs - object to subtract
-     /// @return modified lhs
+     /// @brief Subtract another BitPosition from this one (handles borrow from bytes).
      friend BitPosition& operator-=(BitPosition& lhs, const BitPosition& rhs) {
         lhs.bitPos -= rhs.bitPos;
         if (lhs.bitPos > 7){
@@ -121,10 +117,7 @@ class BitPosition
 
      // subtraction operators 
 
-     /// @brief This method implements the subtraction operator of two Bitposition objects 
-     /// @param lhs - first 
-     /// @param rhs - second 
-     /// @return difference of both objects
+     /// @brief Return the difference of two bit positions.
      friend BitPosition operator-(const BitPosition &lhs, const BitPosition &rhs) {
         BitPosition bp(lhs);
         bp -= rhs;
@@ -134,18 +127,13 @@ class BitPosition
 
      // decrement operators
 
-     /// @brief This method implements the postfix decrement operator of Bitposition object 
-     /// @param lhs - object to be decremented
-     /// @param rhs - second argument is ignored
-     /// @return decremented object
+     /// @brief Postfix decrement.
      friend BitPosition& operator--(BitPosition& lhs, int /*rhs*/){
         operator--(lhs);
         return lhs;
      }
 
-     /// @brief This method implements the prefix decrement operator of Bitposition object 
-     /// @param lhs - object to be decremented
-     /// @return decremented object
+     /// @brief Prefix decrement.
      friend BitPosition& operator--(BitPosition& lhs){
         lhs -= 1;
         return lhs;
@@ -153,45 +141,32 @@ class BitPosition
 
      // comparison operator
 
-     /// @brief This method implements the equality comparison operator of two Bitposition objects 
-     /// @param lhs - first object to be compared
-     /// @param rhs - second object to be compared
-     /// @return compare result
+     /// @brief Equality comparison.
      friend bool operator==(const BitPosition& lhs, const BitPosition& rhs){
         return std::tie(lhs.bitPos,lhs.bytePos) == std::tie(rhs.bitPos,rhs.bytePos);
      }
 
-     /// @brief This method implements the unequality comparison operator of two Bitposition objects 
-     /// @param lhs - first object to be compared
-     /// @param rhs - second object to be compared
-     /// @return compare result
+     /// @brief Inequality comparison.
      friend bool operator!=(const BitPosition& lhs, const BitPosition& rhs){
         return !operator==(lhs,rhs);
      }
 
-     /// @brief This method implements the greather than operator of two Bitposition objects 
-     /// @param lhs - first object to be compared
-     /// @param rhs - second object to be compared
-     /// @return compare result
+     /// @brief Greater-than comparison.
      friend bool operator>(const BitPosition& lhs, const BitPosition& rhs){
         return lhs.bytePos > rhs.bytePos || (lhs.bytePos == rhs.bytePos && lhs.bitPos > rhs.bitPos);
      }
 
-     /// @brief This method implements the less than operator of two Bitposition objects 
-     /// @param lhs - first object to be compared
-     /// @param rhs - second object to be compared
-     /// @return compare result
+     /// @brief Less-than comparison.
      friend bool operator<(const BitPosition& lhs, const BitPosition& rhs){
         return lhs.bytePos < rhs.bytePos || (lhs.bytePos == rhs.bytePos && lhs.bitPos < rhs.bitPos);
      }
 
-     /// @brief This method implements the less than equals operator of two Bitposition objects 
-     /// @param lhs - first object to be compared
-     /// @param rhs - second object to be compared
-     /// @return compare result
+     /// @brief Less-than-or-equal comparison.
      friend bool operator<=(const BitPosition& lhs, const BitPosition& rhs){
         return (lhs < rhs || lhs == rhs);
      }
+
+     /// @brief Stream output in the form "byte.bit" (e.g. "3.5").
      friend std::ostream& operator<<(std::ostream& os, const BitPosition& obj) {
         return os << (int)(obj.bytePos) << "." << (int)(obj.bitPos);
      }
